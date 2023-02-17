@@ -1,10 +1,13 @@
-const API = "https://jsonplaceholder.typicode.com"
+
+const API = "https://jsonplaceholder.typicode.com";
 const controller = action => fetch(action)
     .then(data => data.json())
     .catch(error => alert(error.message))
 
 const form = document.querySelector(".form")
 const cardPublish = document.querySelector(".publish-container")
+const commentsContainer = document.querySelector(".comments-container")
+
 
 form.addEventListener("submit", e => {
     e.preventDefault()
@@ -41,18 +44,21 @@ function publishPost(post) {
     postTitle.innerText = ucFirst(post.title)
     postBody.innerText = ucFirst(post.body)
     btnComments.innerText = "Comments"
+    btnComments.addEventListener("click", () => {
+        addComments()
+    })
+
     // добавляем со внутрь
     cardPublish.append(postTitle)
     cardPublish.append(postBody)
     cardPublish.append(btnComments)
 
-
+///
     function getCommit() {
-        const inputValueCommit = document.getElementById("btn-com").value;
-        ;
-        console.log(inputValueCommit)
-        controller(`${API}/commit`)
-            .then(data => console.log(data))
+        const inputValue = document.getElementById("tentacles").value;
+        console.log(inputValue)
+        controller(`${API}/comments/${inputValue}`)
+            .then(data => addComments(data) )
             .catch(error => alert(error.message))
     }
 
@@ -60,27 +66,18 @@ function publishPost(post) {
 
 }
 
+function addComments(comments) {
 
-// function requestData(method, action, callback) {
-//     const xml = new XMLHttpRequest();
-//     xml.open(method, action);
-//     xml.send();
-//     let parse = response => JSON.parse(response);
-//     xml.addEventListener("readystatechange", () => {
-//         if (xml.readyState === 4 && xml.status === 200) {
-//             const response = parse(xml.responseText).children;
-//             data = data.concat(response);
-//             //if (typeof callback === 'function') {
-//                 callback(data);
-//             //}
-//         }
-//     })
-// }
-//
-// const renderElem = function (response) {
-//     console.log(response);
-// }
-//
-// requestData("GET", `${"request/data.json"}`);
-// requestData("GET", "request/data2.json", renderElem);
+    const authorComment = document.createElement("h4");
+    const commentBody = document.createElement("p");
+
+    authorComment.classList.add("author-comment");
+    commentBody.classList.add("comment-body")
+
+    authorComment.innerText = ucFirst(comments.name)
+    commentBody.innerText = ucFirst(comments.body)
+
+    commentsContainer.append(authorComment)
+    commentsContainer.append(commentBody)
+}
 
