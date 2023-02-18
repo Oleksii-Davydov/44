@@ -6,7 +6,9 @@ const controller = action => fetch(action)
 
 const form = document.querySelector(".form")
 const cardPublish = document.querySelector(".publish-container")
-const commentsContainer = document.querySelector(".comments-container")
+const btnComments = document.createElement("button");
+
+
 
 
 form.addEventListener("submit", e => {
@@ -34,7 +36,7 @@ function publishPost(post) {
     // создаем елементы
     const postTitle = document.createElement("h2");
     const postBody = document.createElement("p");
-    const btnComments = document.createElement("button");
+    // const btnComments = document.createElement("button");
     // добавляем классы к елементам
     postTitle.classList.add("card-title");
     postBody.classList.add("card-body")
@@ -44,40 +46,51 @@ function publishPost(post) {
     postTitle.innerText = ucFirst(post.title)
     postBody.innerText = ucFirst(post.body)
     btnComments.innerText = "Comments"
-    btnComments.addEventListener("click", () => {
-        addComments()
-    })
+    // btnComments.addEventListener("click", () => {
+    //     addComments()
+    // })
 
     // добавляем со внутрь
     cardPublish.append(postTitle)
     cardPublish.append(postBody)
     cardPublish.append(btnComments)
 
-///
-    function getCommit() {
-        const inputValue = document.getElementById("tentacles").value;
-        console.log(inputValue)
-        controller(`${API}/comments/${inputValue}`)
-            .then(data => addComments(data) )
-            .catch(error => alert(error.message))
-    }
 
-    getCommit()
 
 }
+
+
 
 function addComments(comments) {
+   // const btnComments = document.createElement("button");
+    btnComments.addEventListener("click", () => {
 
-    const authorComment = document.createElement("h4");
-    const commentBody = document.createElement("p");
+        const authorComment = document.createElement("h4");
+        const commentBody = document.createElement("p");
 
-    authorComment.classList.add("author-comment");
-    commentBody.classList.add("comment-body")
+        authorComment.classList.add("author-comment");
+        commentBody.classList.add("comment-body")
 
-    authorComment.innerText = ucFirst(comments.name)
-    commentBody.innerText = ucFirst(comments.body)
+        authorComment.innerText = ucFirst(comments.name)
+        commentBody.innerText = ucFirst(comments.body)
 
-    commentsContainer.append(authorComment)
-    commentsContainer.append(commentBody)
+        cardPublish.append(authorComment)
+        cardPublish.append(commentBody)
+    })
+
+
 }
+
+function getCommit() {
+    const inputValue = document.getElementById("tentacles").value
+    controller(`${API}/comments?postId=3`)//.then(data => addComments(data) )
+        .then(data => {
+            data.forEach(comment => addComments(comment));
+        })
+        .catch(error => alert(error.message))
+}
+
+getCommit()
+
+
 
