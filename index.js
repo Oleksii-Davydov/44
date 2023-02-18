@@ -13,7 +13,6 @@ const btnComments = document.createElement("button");
 
 form.addEventListener("submit", e => {
     e.preventDefault()
-
     function getPost() {
         const inputValue = document.getElementById("tentacles").value;
         console.log(inputValue)
@@ -37,6 +36,8 @@ function publishPost(post) {
     const postTitle = document.createElement("h2");
     const postBody = document.createElement("p");
     // const btnComments = document.createElement("button");
+
+
     // добавляем классы к елементам
     postTitle.classList.add("card-title");
     postBody.classList.add("card-body")
@@ -46,11 +47,8 @@ function publishPost(post) {
     postTitle.innerText = ucFirst(post.title)
     postBody.innerText = ucFirst(post.body)
     btnComments.innerText = "Comments"
-    // btnComments.addEventListener("click", () => {
-    //     addComments()
-    // })
 
-    // добавляем со внутрь
+    // добавляем во внутрь
     cardPublish.append(postTitle)
     cardPublish.append(postBody)
     cardPublish.append(btnComments)
@@ -61,36 +59,40 @@ function publishPost(post) {
 
 
 
-function addComments(comments) {
+// function addComments(comments) {
    // const btnComments = document.createElement("button");
-    btnComments.addEventListener("click", () => {
+    btnComments.addEventListener("click", e => {
+        e.preventDefault()
+        //const btnComments = document.createElement("button")
+        function getCommit() {
+            const inputValue = document.getElementById("tentacles").value
+            controller(`${API}/comments?postId=${inputValue}`)//.then(data => addComments(data) )
+                .then(data => {
+                    data.forEach(comment => addComments(comment));
 
-        const authorComment = document.createElement("h4");
-        const commentBody = document.createElement("p");
+                })
+                .catch(error => alert(error.message))
+        }
 
-        authorComment.classList.add("author-comment");
-        commentBody.classList.add("comment-body")
-
-        authorComment.innerText = ucFirst(comments.name)
-        commentBody.innerText = ucFirst(comments.body)
-
-        cardPublish.append(authorComment)
-        cardPublish.append(commentBody)
+        getCommit()
     })
 
+function addComments(comments) {
+    // const btnComments = document.createElement("button");
+    const authorComment = document.createElement("h4");
+    const commentBody = document.createElement("p");
 
+    authorComment.classList.add("author-comment");
+    commentBody.classList.add("comment-body")
+
+    authorComment.innerText = ucFirst(comments.name)
+    commentBody.innerText = ucFirst(comments.body)
+
+    cardPublish.append(authorComment)
+    cardPublish.append(commentBody)
 }
 
-function getCommit() {
-    const inputValue = document.getElementById("tentacles").value
-    controller(`${API}/comments?postId=3`)//.then(data => addComments(data) )
-        .then(data => {
-            data.forEach(comment => addComments(comment));
-        })
-        .catch(error => alert(error.message))
-}
 
-getCommit()
 
 
 
